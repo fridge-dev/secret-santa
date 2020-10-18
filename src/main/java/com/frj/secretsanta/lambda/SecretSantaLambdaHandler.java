@@ -3,8 +3,9 @@ package com.frj.secretsanta.lambda;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.frj.secretsanta.app.SecretSantaService;
-import com.frj.secretsanta.app.SecretSantaBroadcastInput;
-import com.frj.secretsanta.app.SecretSantaBroadcastOutput;
+import com.frj.secretsanta.app.api.ImmutableSecretSantaBroadcastInput;
+import com.frj.secretsanta.app.api.SecretSantaBroadcastInput;
+import com.frj.secretsanta.app.api.SecretSantaBroadcastOutput;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,7 +41,8 @@ public class SecretSantaLambdaHandler implements RequestHandler<SecretSantaLambd
 
     private SecretSantaBroadcastInput convertRequest(final SecretSantaLambdaRequest lambdaRequest) {
         // TODO
-        return new SecretSantaBroadcastInput();
+        return ImmutableSecretSantaBroadcastInput.builder()
+                .build();
     }
 
     private SecretSantaLambdaReply convertReply(final SecretSantaBroadcastOutput appOutput) {

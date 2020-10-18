@@ -1,8 +1,13 @@
 package com.frj.secretsanta.app;
 
-public class NoOpSecretSantaService implements SecretSantaService {
+import com.frj.secretsanta.app.api.ImmutableSecretSantaBroadcastOutput;
+import com.frj.secretsanta.app.api.SecretSantaBroadcastInput;
+import com.frj.secretsanta.app.api.SecretSantaBroadcastOutput;
+
+final class NoOpSecretSantaService implements SecretSantaService {
     @Override
     public SecretSantaBroadcastOutput broadcastMessage(final SecretSantaBroadcastInput input) {
-        return new SecretSantaBroadcastOutput();
+        return ImmutableSecretSantaBroadcastOutput.builder()
+                .build();
     }
 }

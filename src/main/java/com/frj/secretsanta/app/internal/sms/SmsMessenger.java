@@ -1,4 +1,4 @@
-package com.frj.secretsanta.app.sms;
+package com.frj.secretsanta.app.internal.sms;
 
 import org.immutables.value.Value;
 

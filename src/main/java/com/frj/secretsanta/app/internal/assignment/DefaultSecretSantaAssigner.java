@@ -1,4 +1,4 @@
-package com.frj.secretsanta.app.assignment;
+package com.frj.secretsanta.app.internal.assignment;
 
 import java.util.Arrays;
 
