@@ -1,22 +1,18 @@
 package com.frj.secretsanta.app;
 
-import java.util.Objects;
+import org.immutables.value.Value;
 
-public final class AppModule {
+@Value.Immutable
+public interface AppModule {
 
-    public static AppModule newInstance() {
+    SecretSantaService getSecretSantaService();
+
+    static AppModule newInstance() {
         // TODO use real stuff
-        return new AppModule(new NoOpSecretSantaService());
-    }
+        NoOpSecretSantaService secretSantaService = new NoOpSecretSantaService();
 
-    private final SecretSantaService secretSantaService;
-
-    private AppModule(final SecretSantaService secretSantaService) {
-        // No dependencies, yet
-        this.secretSantaService = Objects.requireNonNull(secretSantaService);
-    }
-
-    public SecretSantaService getSecretSantaService() {
-        return secretSantaService;
+        return ImmutableAppModule.builder()
+                .secretSantaService(secretSantaService)
+                .build();
     }
 }
