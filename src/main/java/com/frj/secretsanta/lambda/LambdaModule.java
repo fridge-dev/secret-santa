@@ -9,7 +9,7 @@ public class LambdaModule {
 
     public static SecretSantaLambdaHandler createHandler() {
         AppModule appModule = AppModule.newInstance();
-        return new SecretSantaLambdaHandler(appModule.getSecretSanta());
+        return new SecretSantaLambdaHandler(appModule.getSecretSantaService());
     }
 
 }

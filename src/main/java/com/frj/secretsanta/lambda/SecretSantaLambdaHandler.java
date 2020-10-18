@@ -2,7 +2,7 @@ package com.frj.secretsanta.lambda;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.frj.secretsanta.app.SecretSanta;
+import com.frj.secretsanta.app.SecretSantaService;
 import com.frj.secretsanta.app.SecretSantaBroadcastInput;
 import com.frj.secretsanta.app.SecretSantaBroadcastOutput;
 import org.apache.logging.log4j.LogManager;
@@ -15,10 +15,10 @@ public class SecretSantaLambdaHandler implements RequestHandler<SecretSantaLambd
 
     private static final Logger log = LogManager.getLogger();
 
-    private final SecretSanta secretSanta;
+    private final SecretSantaService secretSantaService;
 
-    public SecretSantaLambdaHandler(final SecretSanta secretSanta) {
-        this.secretSanta = Objects.requireNonNull(secretSanta);
+    public SecretSantaLambdaHandler(final SecretSantaService secretSantaService) {
+        this.secretSantaService = Objects.requireNonNull(secretSantaService);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class SecretSantaLambdaHandler implements RequestHandler<SecretSantaLambd
 
     private SecretSantaLambdaReply doHandle(final SecretSantaLambdaRequest lambdaRequest) {
         final SecretSantaBroadcastInput appInput = convertRequest(lambdaRequest);
-        final SecretSantaBroadcastOutput appOutput = secretSanta.broadcastMessage(appInput);
+        final SecretSantaBroadcastOutput appOutput = secretSantaService.broadcastMessage(appInput);
         return convertReply(appOutput);
     }
 

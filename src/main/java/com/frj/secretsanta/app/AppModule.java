@@ -6,17 +6,17 @@ public final class AppModule {
 
     public static AppModule newInstance() {
         // TODO use real stuff
-        return new AppModule(new NoOpSecretSanta());
+        return new AppModule(new NoOpSecretSantaService());
     }
 
-    private final SecretSanta secretSanta;
+    private final SecretSantaService secretSantaService;
 
-    private AppModule(final SecretSanta secretSanta) {
+    private AppModule(final SecretSantaService secretSantaService) {
         // No dependencies, yet
-        this.secretSanta = Objects.requireNonNull(secretSanta);
+        this.secretSantaService = Objects.requireNonNull(secretSantaService);
     }
 
-    public SecretSanta getSecretSanta() {
-        return secretSanta;
+    public SecretSantaService getSecretSantaService() {
+        return secretSantaService;
     }
 }
