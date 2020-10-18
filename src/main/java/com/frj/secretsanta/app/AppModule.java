@@ -5,17 +5,18 @@ import java.util.Objects;
 public final class AppModule {
 
     public static AppModule newInstance() {
-        return new AppModule(new NoOpSecretSantaHandler());
+        // TODO use real stuff
+        return new AppModule(new NoOpSecretSanta());
     }
 
-    private final SecretSantaMessenger messenger;
+    private final SecretSanta secretSanta;
 
-    private AppModule(final SecretSantaMessenger messenger) {
+    private AppModule(final SecretSanta secretSanta) {
         // No dependencies, yet
-        this.messenger = Objects.requireNonNull(messenger);
+        this.secretSanta = Objects.requireNonNull(secretSanta);
     }
 
-    public SecretSantaMessenger getMessenger() {
-        return messenger;
+    public SecretSanta getSecretSanta() {
+        return secretSanta;
     }
 }

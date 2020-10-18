@@ -2,9 +2,9 @@ package com.frj.secretsanta.lambda;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.frj.secretsanta.app.SecretSantaMessenger;
-import com.frj.secretsanta.app.SecretSantaInput;
-import com.frj.secretsanta.app.SecretSantaOutput;
+import com.frj.secretsanta.app.SecretSanta;
+import com.frj.secretsanta.app.SecretSantaBroadcastInput;
+import com.frj.secretsanta.app.SecretSantaBroadcastOutput;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,10 +15,10 @@ public class SecretSantaLambdaHandler implements RequestHandler<SecretSantaLambd
 
     private static final Logger log = LogManager.getLogger();
 
-    private final SecretSantaMessenger secretSantaMessenger;
+    private final SecretSanta secretSanta;
 
-    public SecretSantaLambdaHandler(final SecretSantaMessenger secretSantaMessenger) {
-        this.secretSantaMessenger = Objects.requireNonNull(secretSantaMessenger);
+    public SecretSantaLambdaHandler(final SecretSanta secretSanta) {
+        this.secretSanta = Objects.requireNonNull(secretSanta);
     }
 
     @Override
@@ -33,17 +33,17 @@ public class SecretSantaLambdaHandler implements RequestHandler<SecretSantaLambd
     }
 
     private SecretSantaLambdaReply doHandle(final SecretSantaLambdaRequest lambdaRequest) {
-        final SecretSantaInput appInput = convertRequest(lambdaRequest);
-        final SecretSantaOutput appOutput = secretSantaMessenger.handle(appInput);
+        final SecretSantaBroadcastInput appInput = convertRequest(lambdaRequest);
+        final SecretSantaBroadcastOutput appOutput = secretSanta.broadcastMessage(appInput);
         return convertReply(appOutput);
     }
 
-    private SecretSantaInput convertRequest(final SecretSantaLambdaRequest lambdaRequest) {
+    private SecretSantaBroadcastInput convertRequest(final SecretSantaLambdaRequest lambdaRequest) {
         // TODO
-        return new SecretSantaInput();
+        return new SecretSantaBroadcastInput();
     }
 
-    private SecretSantaLambdaReply convertReply(final SecretSantaOutput appOutput) {
+    private SecretSantaLambdaReply convertReply(final SecretSantaBroadcastOutput appOutput) {
         // TODO
         return new SecretSantaLambdaReply();
     }

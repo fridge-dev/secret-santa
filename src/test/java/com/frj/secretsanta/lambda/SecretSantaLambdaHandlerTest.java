@@ -1,8 +1,8 @@
 package com.frj.secretsanta.lambda;
 
-import com.frj.secretsanta.app.SecretSantaMessenger;
-import com.frj.secretsanta.app.SecretSantaInput;
-import com.frj.secretsanta.app.SecretSantaOutput;
+import com.frj.secretsanta.app.SecretSanta;
+import com.frj.secretsanta.app.SecretSantaBroadcastInput;
+import com.frj.secretsanta.app.SecretSantaBroadcastOutput;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -16,7 +16,7 @@ class SecretSantaLambdaHandlerTest {
     @Test
     void callsAppLayer() {
         // -- setup --
-        SecretSantaMessenger mockAppHandler = mockedAppHandler(new SecretSantaInput(), new SecretSantaOutput());
+        SecretSanta mockAppHandler = mockedAppHandler(new SecretSantaBroadcastInput(), new SecretSantaBroadcastOutput());
         SecretSantaLambdaRequest lambdaRequest = new SecretSantaLambdaRequest();
 
         // -- execute --
@@ -25,12 +25,12 @@ class SecretSantaLambdaHandlerTest {
 
         // -- verify --
         assertNotNull(lambdaReply);
-        verify(mockAppHandler).handle(any());
+        verify(mockAppHandler).broadcastMessage(any());
     }
 
-    private SecretSantaMessenger mockedAppHandler(final SecretSantaInput expectedInput, final SecretSantaOutput stubbedOutput) {
-        SecretSantaMessenger mockAppHandler = mock(SecretSantaMessenger.class);
-        when(mockAppHandler.handle(expectedInput)).thenReturn(stubbedOutput);
+    private SecretSanta mockedAppHandler(final SecretSantaBroadcastInput expectedInput, final SecretSantaBroadcastOutput stubbedOutput) {
+        SecretSanta mockAppHandler = mock(SecretSanta.class);
+        when(mockAppHandler.broadcastMessage(expectedInput)).thenReturn(stubbedOutput);
 
         return mockAppHandler;
     }
