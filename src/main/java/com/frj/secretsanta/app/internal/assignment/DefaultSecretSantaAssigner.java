@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class DefaultSecretSantaAssigner implements SecretSantaAssigner {
 
     @Override
-    public Output getAssignments(final Input input) {
+    public AssignmentOutput getAssignments(final AssignmentInput input) {
         Assignment assignment1 = ImmutableAssignment.builder()
                 .giverPersonId("hello")
                 .receiverPersonId("world")
@@ -16,7 +16,7 @@ public class DefaultSecretSantaAssigner implements SecretSantaAssigner {
                 .receiverPersonId("world")
                 .build();
 
-        return ImmutableOutput.builder()
+        return ImmutableAssignmentOutput.builder()
                 .assignments(Arrays.asList(assignment1, assignment2))
                 .build();
     }

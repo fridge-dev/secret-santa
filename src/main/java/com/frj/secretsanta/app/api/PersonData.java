@@ -7,7 +7,6 @@ import java.util.Map;
 @Value.Immutable
 public interface PersonData {
     String personId();
-    String displayName();
     String phoneNumber();
     Map<String, String> messageData();
 }

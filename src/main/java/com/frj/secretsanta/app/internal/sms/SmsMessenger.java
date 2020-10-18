@@ -4,11 +4,14 @@ import org.immutables.value.Value;
 
 public interface SmsMessenger {
 
-    void sendSms(Input input);
+    /**
+     * @return true if successful
+     */
+    boolean sendSms(SmsInput input);
 
     @Value.Immutable
-    interface Input {
-        String recipient();
+    interface SmsInput {
+        String phoneNumber();
         String messagePayload();
     }
 }

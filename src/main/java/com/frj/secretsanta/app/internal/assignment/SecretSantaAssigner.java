@@ -4,21 +4,20 @@ import com.frj.secretsanta.app.api.Exclusion;
 import org.immutables.value.Value;
 
 import java.util.List;
-import java.util.Set;
 
 public interface SecretSantaAssigner {
 
-    Output getAssignments(Input input);
+    AssignmentOutput getAssignments(AssignmentInput input);
 
     @Value.Immutable
-    interface Input {
-        Set<String> personIds();
+    interface AssignmentInput {
+        List<String> personIds();
         List<Exclusion> exclusions();
         long rngSeed();
     }
 
     @Value.Immutable
-    interface Output {
+    interface AssignmentOutput {
         List<Assignment> assignments();
     }
 

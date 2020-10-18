@@ -3,9 +3,11 @@ package com.frj.secretsanta.lambda;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.frj.secretsanta.app.SecretSantaService;
+import com.frj.secretsanta.app.api.ClientException;
 import com.frj.secretsanta.app.api.ImmutableSecretSantaBroadcastInput;
 import com.frj.secretsanta.app.api.SecretSantaBroadcastInput;
 import com.frj.secretsanta.app.api.SecretSantaBroadcastOutput;
+import com.frj.secretsanta.app.api.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,7 +37,22 @@ public class SecretSantaLambdaHandler implements RequestHandler<SecretSantaLambd
 
     private SecretSantaLambdaReply doHandle(final SecretSantaLambdaRequest lambdaRequest) {
         final SecretSantaBroadcastInput appInput = convertRequest(lambdaRequest);
-        final SecretSantaBroadcastOutput appOutput = secretSantaService.broadcastMessage(appInput);
+        final SecretSantaBroadcastOutput appOutput;
+
+        try {
+            appOutput = secretSantaService.broadcastMessage(appInput);
+        } catch (ClientException e) {
+            log.info("Invalid input from client, failed to broadcast message.", e);
+            SecretSantaLambdaReply reply = new SecretSantaLambdaReply();
+            reply.setStatus("4xx");
+            return reply;
+        } catch (ServiceException e) {
+            log.error("Internal error while broadcasting message.", e);
+            SecretSantaLambdaReply reply = new SecretSantaLambdaReply();
+            reply.setStatus("5xx");
+            return reply;
+        }
+
         return convertReply(appOutput);
     }
 
