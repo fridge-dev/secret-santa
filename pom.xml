@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.frj.secretsanta</groupId>
+  <artifactId>SecretSantaMessager</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>fridge-dev Secret Santa Messager</name>
+  <url>https://github.com/fridge-dev</url>
+
+  <properties>
+    <jacoco.threshold.class>1.00</jacoco.threshold.class>
+    <jacoco.threshold.method>0.80</jacoco.threshold.method>
+    <jacoco.threshold.instruction>0.90</jacoco.threshold.instruction>
+    <jacoco.threshold.line>0.80</jacoco.threshold.line>
+    <jacoco.threshold.branch>0.80</jacoco.threshold.branch>
+    <jacoco.threshold.complexity>0.80</jacoco.threshold.complexity>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+
+    <!-- The lambda runtime framework -->
+    <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-lambda-java-core -->
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-lambda-java-core</artifactId>
+      <version>1.2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-lambda-java-log4j2</artifactId>
+      <version>1.2.0</version>
+    </dependency>
+
+    <!-- JUnit 5 https://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.4.0</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>2.23.0</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>2.23.0</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <plugins>
+
+      <!-- Creates a fat JAR containing all of my runtime dependencies -->
+      <!-- https://docs.aws.amazon.com/lambda/latest/dg/java-create-jar-pkg-maven-no-ide.html -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.2.1</version>
+        <configuration>
+          <createDependencyReducedPom>false</createDependencyReducedPom>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Compiler -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.0</version>
+        <configuration>
+          <source>11</source>
+          <target>11</target>
+        </configuration>
+      </plugin>
+
+      <!-- Unit test execution -->
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <!--
+             mvn version 3.3 (my current version) doesn't run JUnit 5 tests unless this version is specified.
+             https://dzone.com/articles/why-your-junit-5-tests-are-not-running-under-maven
+        -->
+        <version>2.22.0</version>
+      </plugin>
+
+      <!-- Unit test reporting -->
+      <!-- JaCoCo setup tutorial @ https://automationrhapsody.com/automated-code-coverage-of-unit-tests-with-jacoco-and-maven/ -->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.5</version>
+        <configuration>
+          <excludes>
+            <!-- Global rules -->
+            <exclude>**/models/**/*.class</exclude>
+            <!-- Specific directories -->
+            <!-- Individual Classes -->
+          </excludes>
+        </configuration>
+        <executions>
+          <!-- Prepares the property pointing to the JaCoCo runtime agent. -->
+          <execution>
+            <id>jacoco-prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <!-- Create the index.html report file in target/site/ dir. -->
+          <execution>
+            <id>jacoco-report</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+          <!-- Enforce code coverage -->
+          <execution>
+            <id>jacoco-check</id>
+            <phase>test</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <rule>
+                  <element>BUNDLE</element>
+                  <limits>
+                    <limit>
+                      <counter>CLASS</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>${jacoco.threshold.class}</minimum>
+                    </limit>
+                    <limit>
+                      <counter>METHOD</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>${jacoco.threshold.method}</minimum>
+                    </limit>
+                    <limit>
+                      <counter>INSTRUCTION</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>${jacoco.threshold.instruction}</minimum>
+                    </limit>
+                    <limit>
+                      <counter>LINE</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>${jacoco.threshold.line}</minimum>
+                    </limit>
+                    <limit>
+                      <counter>BRANCH</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>${jacoco.threshold.branch}</minimum>
+                    </limit>
+                    <limit>
+                      <counter>COMPLEXITY</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>${jacoco.threshold.complexity}</minimum>
+                    </limit>
+                  </limits>
+                </rule>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+
+</project>
+
