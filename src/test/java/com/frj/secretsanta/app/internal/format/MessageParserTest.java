@@ -10,14 +10,14 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class MessageFormatterTest {
+class MessageParserTest {
 
     @Test
     void getParams() throws Exception {
         // -- setup --
 
         // -- execute --
-        Set<String> actual = MessageFormatter.getParams("Hello {recipient}, you are {target}'s santa.");
+        Set<String> actual = MessageParser.parseParamKeys("Hello {recipient}, you are {target}'s santa.");
 
         // -- verify --
         HashSet<String> expected = new HashSet<>(Arrays.asList("recipient", "target"));
@@ -29,7 +29,7 @@ class MessageFormatterTest {
         // -- setup --
 
         // -- execute --
-        Set<String> actual = MessageFormatter.getParams("{recipient} you have {target}");
+        Set<String> actual = MessageParser.parseParamKeys("{recipient} you have {target}");
 
         // -- verify --
         HashSet<String> expected = new HashSet<>(Arrays.asList("recipient", "target"));
@@ -41,7 +41,7 @@ class MessageFormatterTest {
         // -- setup --
 
         // -- execute --
-        Set<String> actual = MessageFormatter.getParams("{recipient} you have {target}, {recipient} you have {target}");
+        Set<String> actual = MessageParser.parseParamKeys("{recipient} you have {target}, {recipient} you have {target}");
 
         // -- verify --
         HashSet<String> expected = new HashSet<>(Arrays.asList("recipient", "target"));
@@ -57,6 +57,6 @@ class MessageFormatterTest {
     }
 
     private void assertInvalid(final String message) {
-        assertThrows(ClientException.class, () -> MessageFormatter.getParams(message));
+        assertThrows(ClientException.class, () -> MessageParser.parseParamKeys(message));
     }
 }

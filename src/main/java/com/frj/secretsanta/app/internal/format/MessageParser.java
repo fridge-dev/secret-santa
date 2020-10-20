@@ -1,7 +1,6 @@
 package com.frj.secretsanta.app.internal.format;
 
 import com.frj.secretsanta.app.api.ClientException;
-import com.frj.secretsanta.app.api.PersonData;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -10,11 +9,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MessageFormatter {
+class MessageParser {
 
     private static final Pattern MESSAGE_PARAMS = Pattern.compile("\\{[a-zA-Z]+}");
 
-    public static Set<String> getParams(final String message) throws ClientException {
+    public static Set<String> parseParamKeys(final String message) throws ClientException {
         List<String> params = new ArrayList<>();
         Matcher matcher = MESSAGE_PARAMS.matcher(message);
         while (matcher.find()) {
@@ -59,12 +58,5 @@ public class MessageFormatter {
         }
 
         return numOccurrences;
-    }
-
-    /**
-     * TODO implement
-     */
-    public static String format(final PersonData giftGiver,final PersonData giftReceiver, final String messageFormat) {
-        return null;
     }
 }
