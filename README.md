@@ -11,12 +11,12 @@ This is a secret santa assignment manager and communicator script for personal u
 ### Done-ish
 
 1. Integrate with SMS (still need to test)
-1. Combine everything together in app layer (prob needs revisiting, at end)
 
 ### Done-done
 
 1. Implement assignment logic
 1. Message formatting
+1. Combine everything together in app layer
 
 ### Out of scope
 

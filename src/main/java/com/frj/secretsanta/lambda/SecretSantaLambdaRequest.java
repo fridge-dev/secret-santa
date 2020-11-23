@@ -9,28 +9,33 @@ import java.util.Map;
  * ```
  * {
  *     "messageFormat": "Hello {you}, you are assigned {target}",
- *     "people": {
- *         "Mr. Jackson": {
+ *     "peopleData": [
+ *         {
+ *             "id": "Mr. Jackson",
  *             "phoneNumber": "+12345678900",
  *             "giftIdeas": "Pizza",
  *         },
- *         "Mrs. Jackson": {
+ *         {
+ *             "id": "Mrs. Jackson",
  *             "phoneNumber": "+12345678901",
  *             "giftIdeas": "Sandwich",
  *         },
- *         "Mr. Randall": {
+ *         {
+ *             "id": "Mr. Randall",
  *             "phoneNumber": "+12345678902",
  *             "giftIdeas": "Hiyabusa",
  *         },
- *         "Mrs. Randall": {
+ *         {
+ *             "id": "Mrs. Randall",
  *             "phoneNumber": "+12345678903",
  *             "giftIdeas": "Titanium",
  *         },
- *         "Lloyd": {
+ *         {
+ *             "id": "Lloyd",
  *             "phoneNumber": "+12345678904",
  *             "giftIdeas": "Welp",
  *         },
- *     },
+ *     ],
  *     "exclusionRules": [
  *         ["Mr. Jackson", "Mrs. Jackson"],
  *         ["Mr. Randall", "Mrs. Randall"],
@@ -42,7 +47,7 @@ import java.util.Map;
 public class SecretSantaLambdaRequest {
 
     private String messageFormat;
-    private Map<String, Map<String, String>> personDataById;
+    private List<Map<String, String>> peopleData;
     private List<String[]> exclusionRules;
     private long rngSeed;
     private List<String> personIdsToMessage;
@@ -55,12 +60,12 @@ public class SecretSantaLambdaRequest {
         this.messageFormat = messageFormat;
     }
 
-    public Map<String, Map<String, String>> getPersonDataById() {
-        return personDataById;
+    public List<Map<String, String>> getPeopleData() {
+        return peopleData;
     }
 
-    public void setPersonDataById(Map<String, Map<String, String>> personDataById) {
-        this.personDataById = personDataById;
+    public void setPeopleData(List<Map<String, String>> peopleData) {
+        this.peopleData = peopleData;
     }
 
     public List<String[]> getExclusionRules() {
