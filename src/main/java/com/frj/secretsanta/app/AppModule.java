@@ -1,7 +1,7 @@
 package com.frj.secretsanta.app;
 
 import com.frj.secretsanta.app.internal.AppExternalDeps;
-import com.frj.secretsanta.app.internal.assignment.DefaultSecretSantaAssigner;
+import com.frj.secretsanta.app.internal.assignment.BruteForceSecretSantaAssigner;
 import com.frj.secretsanta.app.internal.sms.SmsModule;
 import org.immutables.value.Value;
 
@@ -14,7 +14,7 @@ public interface AppModule {
         SmsModule smsModule = SmsModule.newInstance(appExternalDeps.amazonSNS());
 
         SecretSantaService secretSantaService = new DefaultSecretSantaService(
-                new DefaultSecretSantaAssigner(),
+                new BruteForceSecretSantaAssigner(),
                 smsModule.getSmsMessenger()
         );
 
