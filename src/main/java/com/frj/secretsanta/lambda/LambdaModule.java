@@ -2,9 +2,9 @@ package com.frj.secretsanta.lambda;
 
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClient;
+import com.frj.secretsanta.app.AppExternalDeps;
 import com.frj.secretsanta.app.AppModule;
-import com.frj.secretsanta.app.internal.AppExternalDeps;
-import com.frj.secretsanta.app.internal.ImmutableAppExternalDeps;
+import com.frj.secretsanta.app.ImmutableAppExternalDeps;
 
 /**
  * Ain't need no DI framework.

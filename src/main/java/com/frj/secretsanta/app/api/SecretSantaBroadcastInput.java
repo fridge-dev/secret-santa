@@ -10,6 +10,7 @@ import java.util.Set;
 
 @Value.Immutable
 public interface SecretSantaBroadcastInput {
+
     String messageFormat();
     Set<String> personIdsToMessage();
     List<PersonData> people();

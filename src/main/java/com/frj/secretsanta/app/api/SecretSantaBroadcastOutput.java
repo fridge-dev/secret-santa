@@ -6,5 +6,7 @@ import java.util.Set;
 
 @Value.Immutable
 public interface SecretSantaBroadcastOutput {
+
     Set<String> failedPersonIds();
+
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 
 @Value.Immutable
 public interface PersonData {
+
     Map<String, String> messageData();
 
     @Value.Check

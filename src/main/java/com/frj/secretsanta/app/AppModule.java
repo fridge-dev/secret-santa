@@ -1,6 +1,5 @@
 package com.frj.secretsanta.app;
 
-import com.frj.secretsanta.app.internal.AppExternalDeps;
 import com.frj.secretsanta.app.internal.assignment.BruteForceSecretSantaAssigner;
 import com.frj.secretsanta.app.internal.sms.SmsModule;
 import org.immutables.value.Value;
