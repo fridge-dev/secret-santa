@@ -45,11 +45,13 @@ public class SecretSantaLambdaHandler implements RequestHandler<SecretSantaLambd
             log.info("Invalid input from client, failed to broadcast message.", e);
             SecretSantaLambdaReply reply = new SecretSantaLambdaReply();
             reply.setStatus("4xx");
+            reply.setErrorMessage(e.getMessage());
             return reply;
         } catch (ServiceException e) {
             log.error("Internal error while broadcasting message.", e);
             SecretSantaLambdaReply reply = new SecretSantaLambdaReply();
             reply.setStatus("5xx");
+            reply.setErrorMessage(e.getMessage());
             return reply;
         }
 
@@ -63,7 +65,15 @@ public class SecretSantaLambdaHandler implements RequestHandler<SecretSantaLambd
     }
 
     private SecretSantaLambdaReply convertReply(final SecretSantaBroadcastOutput appOutput) {
-        // TODO
-        return new SecretSantaLambdaReply();
+        if (appOutput.failedPersonIds().isEmpty()) {
+            SecretSantaLambdaReply.success();
+        }
+
+        final SecretSantaLambdaReply reply = new SecretSantaLambdaReply();
+        reply.setStatus("5xx");
+        reply.setErrorMessage("Partial failure to publish SMS");
+        reply.setFailedIndividuals(appOutput.failedPersonIds());
+
+        return reply;
     }
 }

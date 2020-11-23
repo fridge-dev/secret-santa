@@ -6,6 +6,14 @@ public class SecretSantaLambdaReply {
 
     private String status;
     private Set<String> failedIndividuals;
+    private String errorMessage;
+
+    public static SecretSantaLambdaReply success() {
+        SecretSantaLambdaReply reply = new SecretSantaLambdaReply();
+        reply.setStatus("200");
+
+        return reply;
+    }
 
     public void setStatus(String status) {
         this.status = status;
@@ -21,5 +29,13 @@ public class SecretSantaLambdaReply {
 
     public Set<String> getFailedIndividuals() {
         return failedIndividuals;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
     }
 }
