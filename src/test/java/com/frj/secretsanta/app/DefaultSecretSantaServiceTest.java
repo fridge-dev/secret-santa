@@ -1,9 +1,10 @@
 package com.frj.secretsanta.app;
 
+import com.amazonaws.services.sns.AmazonSNS;
 import com.frj.secretsanta.app.api.SecretSantaBroadcastOutput;
 import com.frj.secretsanta.app.api.ServiceApiTestUtils;
-import com.frj.secretsanta.app.internal.assignment.SecretSantaAssigner;
-import com.frj.secretsanta.app.internal.sms.SmsMessenger;
+import com.frj.secretsanta.app.internal.AppExternalDeps;
+import com.frj.secretsanta.app.internal.ImmutableAppExternalDeps;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,15 +13,19 @@ import static org.mockito.Mockito.mock;
 
 class DefaultSecretSantaServiceTest {
 
-    private DefaultSecretSantaService service;
-    private SecretSantaAssigner mockAssigner;
-    private SmsMessenger mockMessenger;
+    private SecretSantaService service;
+    private AmazonSNS mockSns;
 
     @BeforeEach
     void setup() {
-        mockAssigner = mock(SecretSantaAssigner.class);
-        mockMessenger = mock(SmsMessenger.class);
-        service = new DefaultSecretSantaService(mockAssigner, mockMessenger);
+        mockSns = mock(AmazonSNS.class);
+
+        AppExternalDeps appExternalDeps = ImmutableAppExternalDeps.builder()
+                .amazonSNS(mockSns)
+                .build();
+        AppModule appModule = AppModule.newInstance(appExternalDeps);
+
+        service = appModule.getSecretSantaService();
     }
 
     @Test

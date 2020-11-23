@@ -11,7 +11,6 @@ import com.frj.secretsanta.app.internal.format.SantaMessageFormatter;
 import com.frj.secretsanta.app.internal.sms.ImmutableSmsInput;
 import com.frj.secretsanta.app.internal.sms.SmsMessenger;
 
-import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -70,8 +69,8 @@ public class DefaultSecretSantaService implements SecretSantaService {
 
         // Validate personIdsToMessage is subset of people
         for (String personIdToMessage : input.personIdsToMessage()) {
-            if (input.allPersonIds().contains(personIdToMessage)) {
-                throw new ClientException(MessageFormat.format("PersonIdToMessage '{0}' is missing in people list", personIdToMessage));
+            if (!input.allPersonIds().contains(personIdToMessage)) {
+                throw new ClientException(String.format("PersonIdToMessage '%s' is missing in people list", personIdToMessage));
             }
         }
     }

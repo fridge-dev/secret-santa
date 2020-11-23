@@ -36,6 +36,13 @@
       <version>1.2.0</version>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-sns -->
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk-sns</artifactId>
+      <version>1.11.906</version>
+    </dependency>
+
     <!-- https://mvnrepository.com/artifact/org.immutables/value -->
     <dependency>
       <groupId>org.immutables</groupId>
