@@ -4,9 +4,20 @@ This is a secret santa assignment manager and communicator script for personal u
 
 # Remaining work (high level)
 
-1. Implement assignment logic
-1. Integrate with SMS
-1. Build local 'person' database (local file, or just in memory hashmap `:P`)
-1. Combine everything together in app layer
+### TODO
+
+1. Validate message formatting
 1. Integrate with lambda as entry point
 
+### Done-ish
+
+1. Integrate with SMS (still need to test)
+1. Combine everything together in app layer (prob needs revisiting, at end)
+
+### Done-done
+
+1. Implement assignment logic
+
+### Out of scope
+
+1. Build local 'person' database (local file, or just in memory hashmap `:P`)
