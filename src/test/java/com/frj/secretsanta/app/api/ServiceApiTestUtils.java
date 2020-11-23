@@ -26,9 +26,9 @@ public class ServiceApiTestUtils {
             final Map<String, String> messageData
     ) {
         return ImmutablePersonData.builder()
-                .personId(personId)
-                .phoneNumber(phoneNumber)
                 .messageData(messageData)
+                .putMessageData("id", personId)
+                .putMessageData("phoneNumber", phoneNumber)
                 .build();
     }
 }
