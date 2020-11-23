@@ -46,9 +46,13 @@ public class AwsSnsSmsMessenger implements SmsMessenger {
                 .withMessage(input.messagePayload())
                 .withPhoneNumber(input.phoneNumber());
 
-        PublishResult result = sns.publish(publishRequest);
-        log.info("Published to SNS. Result: {}", result);
-
-        return true;
+        try {
+            PublishResult result = sns.publish(publishRequest);
+            log.info("Published to SNS. Result: {}", result);
+            return true;
+        } catch (RuntimeException e) {
+            log.error("Failed to publish to SNS for target '{}'.", input.phoneNumber(), e);
+            return false;
+        }
     }
 }
