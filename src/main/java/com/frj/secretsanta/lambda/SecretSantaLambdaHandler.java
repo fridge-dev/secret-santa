@@ -47,7 +47,7 @@ public class SecretSantaLambdaHandler implements RequestHandler<SecretSantaLambd
             reply.setStatus("4xx");
             reply.setErrorMessage(e.getMessage());
             return reply;
-        } catch (ServiceException e) {
+        } catch (ServiceException | RuntimeException e) {
             log.error("Internal error while broadcasting message.", e);
             SecretSantaLambdaReply reply = new SecretSantaLambdaReply();
             reply.setStatus("5xx");

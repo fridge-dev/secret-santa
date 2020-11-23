@@ -11,6 +11,7 @@ import com.frj.secretsanta.app.internal.format.SantaMessageFormatter;
 import com.frj.secretsanta.app.internal.sms.ImmutableSmsInput;
 import com.frj.secretsanta.app.internal.sms.SmsMessenger;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -30,12 +31,11 @@ public class DefaultSecretSantaService implements SecretSantaService {
     @Override
     public SecretSantaBroadcastOutput broadcastMessage(final SecretSantaBroadcastInput input) throws ClientException {
         validateInput(input);
-        // Do this before any logic, because it also validates input.
-        final SantaMessageFormatter santaMessageFormatter = createSantaMessageFormatter(input);
 
         final SecretSantaAssigner.AssignmentOutput assignmentOutput = getAssignments(input);
 
-        final Set<String> failedPersonIds = broadcastSms(input, assignmentOutput.assignments(), santaMessageFormatter);
+        final List<DecoratedSmsInput> smsInputs = createSmsInputs(input, assignmentOutput.assignments());
+        final Set<String> failedPersonIds = broadcastSms(smsInputs);
 
         return ImmutableSecretSantaBroadcastOutput.builder()
                 .failedPersonIds(failedPersonIds)
@@ -75,31 +75,25 @@ public class DefaultSecretSantaService implements SecretSantaService {
         }
     }
 
-    private SantaMessageFormatter createSantaMessageFormatter(final SecretSantaBroadcastInput input) throws ClientException {
-        final SantaMessageFormatter messageFormatter = SantaMessageFormatter.create(input.messageFormat());
-        for (PersonData person : input.people()) {
-            messageFormatter.performPreValidation(person);
-        }
-
-        return messageFormatter;
-    }
-
     private SecretSantaAssigner.AssignmentOutput getAssignments(final SecretSantaBroadcastInput apiInput) {
         ImmutableAssignmentInput assignmentInput = ImmutableAssignmentInput.builder()
                 .personIds(apiInput.allPersonIds())
                 .exclusions(apiInput.exclusions())
                 .rngSeed(apiInput.rngSeed())
                 .build();
+
         return assigner.getAssignments(assignmentInput);
     }
 
     // TODO use some personDatabase object here instead of service input.
-    private Set<String> broadcastSms(
+    private List<DecoratedSmsInput> createSmsInputs(
             final SecretSantaBroadcastInput serviceInput,
-            final List<SecretSantaAssigner.Assignment> assignments,
-            final SantaMessageFormatter santaMessageFormatter
-    ) {
-        final Set<String> failedPersonIds = new HashSet<>();
+            final List<SecretSantaAssigner.Assignment> assignments
+    ) throws ClientException {
+        final SantaMessageFormatter santaMessageFormatter = SantaMessageFormatter.create(serviceInput.messageFormat());
+
+        List<DecoratedSmsInput> smsInputs = new ArrayList<>();
+
         for (SecretSantaAssigner.Assignment assignment : assignments) {
             final PersonData giftGiver = serviceInput.peopleByPersonId().get(assignment.giverPersonId());
             final PersonData giftReceiver = serviceInput.peopleByPersonId().get(assignment.receiverPersonId());
@@ -107,24 +101,39 @@ public class DefaultSecretSantaService implements SecretSantaService {
                 continue;
             }
 
-            final boolean success = sendSms(giftGiver, giftReceiver, santaMessageFormatter);
+            final String phoneNumber = giftGiver.phoneNumber();
+            final String messagePayload = santaMessageFormatter.format(giftGiver, giftReceiver);
 
+            final SmsMessenger.SmsInput smsInput = ImmutableSmsInput.builder()
+                    .phoneNumber(phoneNumber)
+                    .messagePayload(messagePayload)
+                    .build();
+
+            smsInputs.add(new DecoratedSmsInput(smsInput, giftGiver.personId()));
+        }
+
+        return smsInputs;
+    }
+
+    private Set<String> broadcastSms(final List<DecoratedSmsInput> inputs) {
+        final Set<String> failedPersonIds = new HashSet<>();
+        for (DecoratedSmsInput input : inputs) {
+            final boolean success = messenger.sendSms(input.smsInput);
             if (!success) {
-                failedPersonIds.add(assignment.giverPersonId());
+                failedPersonIds.add(input.recipientPersonId);
             }
         }
+
         return failedPersonIds;
     }
 
-    private boolean sendSms(final PersonData giftGiver, final PersonData giftReceiver, final SantaMessageFormatter santaMessageFormatter) {
-        final String phoneNumber = giftGiver.phoneNumber();
-        final String messagePayload = santaMessageFormatter.format(giftGiver, giftReceiver);
+    private static final class DecoratedSmsInput {
+        final SmsMessenger.SmsInput smsInput;
+        final String recipientPersonId;
 
-        final ImmutableSmsInput smsInput = ImmutableSmsInput.builder()
-                .phoneNumber(phoneNumber)
-                .messagePayload(messagePayload)
-                .build();
-
-        return messenger.sendSms(smsInput);
+        private DecoratedSmsInput(SmsMessenger.SmsInput input, String recipientPersonId) {
+            this.smsInput = Objects.requireNonNull(input);
+            this.recipientPersonId = Objects.requireNonNull(recipientPersonId);
+        }
     }
 }

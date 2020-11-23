@@ -3,7 +3,8 @@ package com.frj.secretsanta.app.internal.format;
 import com.frj.secretsanta.app.api.ClientException;
 import com.frj.secretsanta.app.api.PersonData;
 
-import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Secret santa specific formatting logic (i.e. uses {@link PersonData}).
@@ -20,15 +21,11 @@ public class SantaMessageFormatter {
         return new SantaMessageFormatter(RawMessageFormatter.create(messageFormat));
     }
 
-    public String format(final PersonData giftGiver, final PersonData giftReceiver) {
-        // TODO implement properly & test
-        return messageFormatter.format(giftGiver.messageData());
-    }
+    public String format(final PersonData giftGiver, final PersonData giftReceiver) throws ClientException {
+        final Map<String, String> params = new HashMap<>();
+        giftGiver.messageData().forEach((k, v) -> params.put("self." + k, v));
+        giftReceiver.messageData().forEach((k, v) -> params.put("target." + k, v));
 
-    public void performPreValidation(final PersonData person) throws ClientException {
-        // TODO implement properly & test
-        if (!messageFormatter.areParamsValid(person.messageData().keySet())) {
-            throw new ClientException(MessageFormat.format("Person {0} has missing or extra params", person.personId()));
-        }
+        return messageFormatter.format(params);
     }
 }

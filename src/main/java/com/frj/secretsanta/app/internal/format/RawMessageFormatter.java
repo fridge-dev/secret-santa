@@ -6,17 +6,19 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Generic message formatting logic
+ * Generic message formatting logic.
+ *
+ * An instance of this is specific to a message format, not to a specific person.
  */
-public class RawMessageFormatter {
+class RawMessageFormatter {
 
     private final String messageFormat;
 
-    private final Set<String> paramKeys;
+    private final Set<String> messageFormatKeys;
 
-    private RawMessageFormatter(String messageFormat, Set<String> paramKeys) {
+    private RawMessageFormatter(String messageFormat, Set<String> messageFormatKeys) {
         this.messageFormat = messageFormat;
-        this.paramKeys = paramKeys;
+        this.messageFormatKeys = messageFormatKeys;
     }
 
     public static RawMessageFormatter create(final String messageFormat) throws ClientException {
@@ -24,20 +26,16 @@ public class RawMessageFormatter {
         return new RawMessageFormatter(messageFormat, params);
     }
 
-    public String format(final Map<String, String> paramValues) {
-        if (!paramKeys.equals(paramValues.keySet())) {
-            throw new IllegalArgumentException("Illegal set of message format params.");
+    public String format(final Map<String, String> paramsForPerson) throws ClientException {
+        if (!paramsForPerson.keySet().containsAll(messageFormatKeys)) {
+            throw new ClientException("Illegal set of message format params.");
         }
 
         String formattedMessage = messageFormat;
-        for (String paramKey : paramKeys) {
-            formattedMessage = formattedMessage.replaceAll(String.format("{%s}", paramKey), paramValues.get(paramKey));
+        for (String key : messageFormatKeys) {
+            formattedMessage = formattedMessage.replaceAll(String.format("\\{%s}", key), paramsForPerson.get(key));
         }
 
         return formattedMessage;
-    }
-
-    public boolean areParamsValid(final Set<String> paramKeys) {
-        return this.paramKeys.equals(paramKeys);
     }
 }

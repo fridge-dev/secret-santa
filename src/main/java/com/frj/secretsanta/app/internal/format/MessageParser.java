@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 class MessageParser {
 
-    private static final Pattern MESSAGE_PARAMS = Pattern.compile("\\{[a-zA-Z]+}");
+    private static final Pattern MESSAGE_PARAMS = Pattern.compile("\\{[a-zA-Z.]+}");
 
     public static Set<String> parseParamKeys(final String message) throws ClientException {
         List<String> params = new ArrayList<>();

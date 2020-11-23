@@ -17,10 +17,10 @@ class MessageParserTest {
         // -- setup --
 
         // -- execute --
-        Set<String> actual = MessageParser.parseParamKeys("Hello {recipient}, you are {target}'s santa.");
+        Set<String> actual = MessageParser.parseParamKeys("Hello {self.id}, you are {target.id}'s santa.");
 
         // -- verify --
-        HashSet<String> expected = new HashSet<>(Arrays.asList("recipient", "target"));
+        HashSet<String> expected = new HashSet<>(Arrays.asList("self.id", "target.id"));
         assertEquals(expected, actual);
     }
 
@@ -51,6 +51,7 @@ class MessageParserTest {
     @Test
     void getParams_Illegal() throws Exception {
         assertInvalid("Bad: {recip{ient}");
+        assertInvalid("Bad: {recip{i}ent}");
         assertInvalid("We {can't do this either}");
         assertInvalid("No no no! {}");
         assertInvalid("Also bad: }");

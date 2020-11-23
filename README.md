@@ -6,7 +6,6 @@ This is a secret santa assignment manager and communicator script for personal u
 
 ### TODO
 
-1. Message formatting
 1. Integrate with lambda as entry point
 
 ### Done-ish
@@ -17,6 +16,7 @@ This is a secret santa assignment manager and communicator script for personal u
 ### Done-done
 
 1. Implement assignment logic
+1. Message formatting
 
 ### Out of scope
 
