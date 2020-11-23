@@ -13,10 +13,10 @@
   <properties>
     <jacoco.threshold.class>1.00</jacoco.threshold.class>
     <jacoco.threshold.method>0.80</jacoco.threshold.method>
-    <jacoco.threshold.instruction>0.90</jacoco.threshold.instruction>
+    <jacoco.threshold.instruction>0.80</jacoco.threshold.instruction>
     <jacoco.threshold.line>0.80</jacoco.threshold.line>
-    <jacoco.threshold.branch>0.80</jacoco.threshold.branch>
-    <jacoco.threshold.complexity>0.80</jacoco.threshold.complexity>
+    <jacoco.threshold.branch>0.70</jacoco.threshold.branch>
+    <jacoco.threshold.complexity>0.70</jacoco.threshold.complexity>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -128,8 +128,11 @@
           <excludes>
             <!-- Global rules -->
             <exclude>**/models/**/*.class</exclude>
+            <exclude>**/*Exception.class</exclude>
             <!-- Specific directories -->
             <!-- Individual Classes -->
+            <exclude>com/frj/secretsanta/lambda/LambdaModule.class</exclude>
+            <exclude>com/frj/secretsanta/lambda/SecretSantaLambdaHandlerStaticWrapper.class</exclude>
           </excludes>
         </configuration>
         <executions>

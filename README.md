@@ -4,7 +4,7 @@ This is a secret santa assignment manager and communicator script for personal u
 
 # Remaining work (high level)
 
-### TODO
+### To do
 
 1. Integrate with lambda as entry point
 

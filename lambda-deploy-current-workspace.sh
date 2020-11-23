@@ -5,5 +5,5 @@ exit 1 # TODO
 mvn clean install && \
 aws lambda update-function-code \
     --function-name TODO \
-    --zip-file fileb://./target/TODO-1.0-SNAPSHOT.jar
+    --zip-file fileb://./target/SecretSantaMessager-1.0-SNAPSHOT.jar
 
