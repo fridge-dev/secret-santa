@@ -1,6 +1,10 @@
 # secret-santa
 
-This is a Secret Santa assignment manager and text notification system, for my personal use. This system will generate pseudorandom Secret Santa gift assignments (with optional exclusion rules) and broadcast text messages to all people in the group. The system is the only one that knows the assignments, so it will be a secret for everyone!
+This is a Secret Santa assignment manager and SMS (text) notification system.
+
+This system will generate pseudorandom Secret Santa gift assignments (with optional exclusion rules) and broadcast text messages to all people in the group. The system is the only one that knows the assignments, so it will be a secret for everyone!
+
+The target audience of using this software is, well, just me. But maybe someone else finds it useful too!
 
 # How it works
 
@@ -12,11 +16,13 @@ The configuration file also includes a message template that will be used to gen
 
 The system requires action of a human admin to initiate the broadcasting of text messages. But the beauty of it is that human admin won't even know who is assigned to give a gift to whom!
 
-## Example Configuration File
+## Example
+
+Here's an example configuration file.
 
 ```
 {
-  "messageFormat": "Secret Santa: Hello {self.id}, you are assigned to give a present to {target.id}. In their own words, here is their wishlist: '{target.wishlist}'.",
+  "messageFormat": "Secret Santa: Hello {self.id}, you are assigned to give a present to {target.id}. In their own words, here is {target.id}'s wishlist: '{target.wishlist}'.",
   "peopleData": [
     {
       "id": "Heather",
@@ -51,6 +57,16 @@ The system requires action of a human admin to initiate the broadcasting of text
   "rngSeed": 1234
 }
 ```
+
+Here's an example outcome from this configuration file. Each person would receive their corresponding text message:
+
+Recipient | SMS message contents
+-|-
+Heather | *Secret Santa: Hello Heather, you are assigned to give a present to Diana. In their own words, here is Diana's wishlist: 'Heavy metal, chocolate'.*
+Brad | *Secret Santa: Hello Brad, you are assigned to give a present to Brylon. In their own words, here is Brylon's wishlist: 'Tube socks, jump rope, and skeeter boards'.*
+Diana | *Secret Santa: Hello Diana, you are assigned to give a present to Brad. In their own words, here is Brad's wishlist: 'I like lifting weights. LoL!'.*
+Brylon | *Secret Santa: Hello Brylon, you are assigned to give a present to Zayne. In their own words, here is Zayne's wishlist: 'I am really into anything with the color lime-green'.*
+Zayne | *Secret Santa: Hello Zayne, you are assigned to give a present to Heather. In their own words, here is Heather's wishlist: 'sci-fi novels, baking, ice skating'.*
 
 ## Tech details
 
