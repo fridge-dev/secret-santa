@@ -1,4 +1,4 @@
-# Resource Creation (a working doc...)
+# Resource Creation
 
 Because I am too lazy to learn CloudFormation.
 
@@ -33,7 +33,7 @@ Create Policy
                 "logs:PutLogEvents"
             ],
             "Resource": [
-                "arn:aws:logs:us-west-2:645154635593:log-group:/aws/lambda/$FUNCTION_NAME:*",
+                "arn:aws:logs:us-west-2:645154635593:log-group:/aws/lambda/$FUNCTION_NAME:*"
             ]
         }
     ]
