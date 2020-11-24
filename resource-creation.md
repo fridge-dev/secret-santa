@@ -35,6 +35,11 @@ Create Policy
             "Resource": [
                 "arn:aws:logs:us-west-2:645154635593:log-group:/aws/lambda/$FUNCTION_NAME:*"
             ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": "sns:Publish",
+            "Resource": "*"
         }
     ]
 }

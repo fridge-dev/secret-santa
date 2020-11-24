@@ -24,14 +24,14 @@ public class AwsSnsSmsMessenger implements SmsMessenger {
                     .withStringValue("SecretSanta")),
             Map.entry("AWS.SNS.SMS.MaxPrice", new MessageAttributeValue()
                     .withDataType("Number")
-                    .withStringValue("0.01")),
+                    .withStringValue("1.00")),
             Map.entry("AWS.SNS.SMS.SMSType", new MessageAttributeValue()
                     .withDataType("String")
                     // Favor lower price over guaranteed delivery
                     .withStringValue("Promotional"))
     );
 
-    private static final Logger log = LogManager.getLogger();
+    private static final Logger log = LogManager.getLogger(AwsSnsSmsMessenger.class);
 
     private final AmazonSNS sns;
 
@@ -41,6 +41,8 @@ public class AwsSnsSmsMessenger implements SmsMessenger {
 
     @Override
     public boolean sendSms(final SmsInput input) {
+        System.out.printf("Sending message to %s of length %d%n", input.phoneNumber(), input.messagePayload().length());
+
         PublishRequest publishRequest = new PublishRequest()
                 .withMessageAttributes(SMS_ATTRIBUTES)
                 .withMessage(input.messagePayload())
@@ -48,7 +50,7 @@ public class AwsSnsSmsMessenger implements SmsMessenger {
 
         try {
             PublishResult result = sns.publish(publishRequest);
-            log.info("Published to SNS. Result: {}", result);
+            System.out.printf("Published to SNS. Result: %s%n", result);
             return true;
         } catch (RuntimeException e) {
             log.error("Failed to publish to SNS for target '{}'.", input.phoneNumber(), e);

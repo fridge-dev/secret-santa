@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 public class SecretSantaLambdaHandler implements RequestHandler<SecretSantaLambdaRequest, SecretSantaLambdaReply> {
 
-    private static final Logger log = LogManager.getLogger();
+    private static final Logger log = LogManager.getLogger(SecretSantaLambdaHandler.class);
 
     private final SecretSantaService secretSantaService;
 
@@ -37,7 +37,7 @@ public class SecretSantaLambdaHandler implements RequestHandler<SecretSantaLambd
             return doHandle(lambdaRequest);
         } finally {
             final long duration = System.nanoTime() - start;
-            log.info("Timer#LambdaHandler={}ms", TimeUnit.NANOSECONDS.toMillis(duration));
+            System.out.printf("Timer#LambdaHandler=%dms%n", TimeUnit.NANOSECONDS.toMillis(duration));
         }
     }
 
