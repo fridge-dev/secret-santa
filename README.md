@@ -1,28 +1,42 @@
 # secret-santa
 
-This is a Secret Santa assignment manager and SMS (text) notification system.
+This is a Secret Santa gift assigner and SMS (text) notification system.
 
-This system will generate pseudorandom Secret Santa gift assignments (with optional exclusion rules) and broadcast text messages to all people in the group. The system is the only one that knows the assignments, so it will be a secret for everyone!
+This system will generate random Secret Santa gift assignments for a group of people and send text messages to each person saying who they get to buy a gift for. The system is the only one that knows the assignments, so it will be a secret for everyone!
 
 The target audience of using this software is, well, just me. But maybe someone else finds it useful too!
 
 # How it works
 
-You provide a configuration file in the request payload, and the system takes care of everything.
+You provide your group's info, and the system takes care of everything.
 
-The configuration file contains the people who are in your Secret Santa group and optional exclusion rules (e.g. Heather and Brad shouldn't be assigned to each other). The configuration file also includes a static RNG seed that is used to generate a deterministic, pseudorandom assignment order. It's important that once you finalize your group, you don't change your group, exclusion rules, or RNG seed, because the gift giving assignments would change as a result.
+You provide the name and phone number of each group member, along with optional exclusion rules (e.g. people from the same family shouldn't give each other gifts).
 
-The configuration file also includes a message template that will be used to generate a customizable message based on who the text is being sent to and who that person is assigned to give a gift. There is an example below.
+You also provide a message template that will be used to send a customizable SMS based on who is receiving the SMS message and who that person is assigned to give a gift to. There is an example below.
 
-The system requires action of a human admin to initiate the broadcasting of text messages. But the beauty of it is that human admin won't even know who is assigned to give a gift to whom!
+You provide all of this info to the system admin (aka me). The system requires action of a human admin to send all of the SMS messages. But the beauty of it is that the human admin won't even know who is assigned to give a gift to whom!
 
 ## Example
 
-Here's an example configuration file.
+Here's **one possible outcome** of the Secret Santa group below.
+
+Recipient | SMS message contents
+-|-
+Heather | *Secret Santa: Hello Heather, you are assigned to give a present to Diana. Diana's wishlist: 'Heavy metal, chocolate'.*
+Brad | *Secret Santa: Hello Brad, you are assigned to give a present to Brylon. Brylon's wishlist: 'Tube socks, jump rope, and skeeter boards'.*
+Diana | *Secret Santa: Hello Diana, you are assigned to give a present to Brad. Brad's wishlist: 'I like lifting weights. LoL!'.*
+Brylon | *Secret Santa: Hello Brylon, you are assigned to give a present to Zayne. Zayne's wishlist: 'I am really into anything with the color lime-green'.*
+Zayne | *Secret Santa: Hello Zayne, you are assigned to give a present to Heather. Heather's wishlist: 'sci-fi novels, baking, ice skating'.*
+
+Corresponding configuration file maintained by the admin:
 
 ```
 {
-  "messageFormat": "Secret Santa: Hello {self.id}, you are assigned to give a present to {target.id}. In their own words, here is {target.id}'s wishlist: '{target.wishlist}'.",
+  // Customizable template of what each person will be texted. You can change this
+  // and send updated info to the group without changing their assignments.
+  "messageFormat": "Secret Santa: Hello {self.id}, you are assigned to give a present to {target.id}. {target.id}'s wishlist: '{target.wishlist}'.",
+
+  // The people in the group.
   "peopleData": [
     {
       "id": "Heather",
@@ -50,27 +64,25 @@ Here's an example configuration file.
       "wishlist": "I am really into anything with the color lime-green"
     }
   ],
+
+  // Pairs of people which are not allowed to give each other gifts.
   "exclusionRules": [
     ["Heather", "Brad"],
     ["Diana", "Brylon"]
   ],
+
+  // Used to deterministically generate a pseudorandom assignment order.
   "rngSeed": 1234
 }
 ```
 
-Here's an example outcome from this configuration file. Each person would receive their corresponding text message:
-
-Recipient | SMS message contents
--|-
-Heather | *Secret Santa: Hello Heather, you are assigned to give a present to Diana. In their own words, here is Diana's wishlist: 'Heavy metal, chocolate'.*
-Brad | *Secret Santa: Hello Brad, you are assigned to give a present to Brylon. In their own words, here is Brylon's wishlist: 'Tube socks, jump rope, and skeeter boards'.*
-Diana | *Secret Santa: Hello Diana, you are assigned to give a present to Brad. In their own words, here is Brad's wishlist: 'I like lifting weights. LoL!'.*
-Brylon | *Secret Santa: Hello Brylon, you are assigned to give a present to Zayne. In their own words, here is Zayne's wishlist: 'I am really into anything with the color lime-green'.*
-Zayne | *Secret Santa: Hello Zayne, you are assigned to give a present to Heather. In their own words, here is Heather's wishlist: 'sci-fi novels, baking, ice skating'.*
-
 ## Tech details
 
 This runs as a lambda function and sends SMS via AWS SNS. You provide the configuration in the invoke request payload.
+
+## Cost
+
+This is basically free. It costs fractions of a penny per-invocation and per-SMS.
 
 -------------------
 
