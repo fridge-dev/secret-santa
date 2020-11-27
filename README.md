@@ -88,10 +88,13 @@ This is basically free. It costs fractions of a penny per-invocation and per-SMS
 
 # Project planning
 
-### To do
+### Backlog (somewhat ordered)
 
 1. Fix logging
+1. Add ability to text "secret santa of X" instead of only texting "X" or all
+1. Use ordered phoneNumbers as hash in RNG seed to ensure different groups of same size don't have same permutation of assignments
 1. Enable adding someone to an already created group and disrupting the least amount of assignments
+1. Back people/assignments with database to more easily refer to a group
 
 ### Done
 
@@ -100,7 +103,3 @@ This is basically free. It costs fractions of a penny per-invocation and per-SMS
 1. Combine everything together in app layer
 1. Integrate with lambda as entry point
 1. Integrate with SMS (still need to test)
-
-### Out of scope
-
-1. Back people/assignments with database to more easily refer to a group
