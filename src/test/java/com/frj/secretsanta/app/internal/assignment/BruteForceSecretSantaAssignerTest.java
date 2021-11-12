@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -133,5 +134,50 @@ class BruteForceSecretSantaAssignerTest {
 
         assertEquals(new HashSet<>(input.personIds()), givers, "Givers is not set-equal to input");
         assertEquals(new HashSet<>(input.personIds()), receivers, "Receivers is not set-equal to input");
+    }
+
+    /**
+     * Run via
+     * ```
+     * mvn -Dtest=BruteForceSecretSantaAssignerTest#numberOfUniquePossibilities test
+     * ```
+     */
+    @Test
+    void numberOfUniquePossibilities() {
+        final SecretSantaAssigner assigner = new BruteForceSecretSantaAssigner();
+        final SecretSantaAssigner.AssignmentInput baseInput = ImmutableAssignmentInput.builder()
+                .personIds(Arrays.asList("Person1", "Person2", "Person3", "Person4", "Person5", "Person6", "Person7"))
+                .exclusions(Arrays.asList(Exclusion.of("Person1", "Person2"), Exclusion.of("Person3", "Person4"), Exclusion.of("Person5", "Person6")))
+                .rngSeed(1L)
+                .build();
+
+        final Set<Set<SecretSantaAssigner.Assignment>> uniqueResults = new HashSet<>();
+
+        final SecretSantaAssigner.Assignment varietySample = ImmutableAssignment.builder()
+                .giverPersonId("Person1")
+                .receiverPersonId("Person7")
+                .build();
+
+        for (long seed = 1L; seed < 100000; seed++) {
+            final SecretSantaAssigner.AssignmentInput input = copyAndSetRngSeed(baseInput, seed);
+
+            final SecretSantaAssigner.AssignmentOutput output = assigner.getAssignments(input);
+
+            if (uniqueResults.add(toSet(output))) {
+                System.out.println(String.format("Unique'd seed: %d", seed));
+            }
+        }
+
+        System.out.println(String.format("Total unique combinations: %d", uniqueResults.size()));
+
+        final int numberContainingSample = uniqueResults.stream()
+                .filter(assignments -> assignments.contains(varietySample))
+                .collect(Collectors.toList())
+                .size();
+        System.out.println(String.format("Number containing variety sample: %d", numberContainingSample));
+    }
+
+    private Set<SecretSantaAssigner.Assignment> toSet(final SecretSantaAssigner.AssignmentOutput output) {
+        return new HashSet<>(output.assignments());
     }
 }
