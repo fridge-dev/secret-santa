@@ -19,12 +19,10 @@ public class LambdaModule {
 
     private static AppExternalDeps createExternalDependencies() {
         AmazonSNS sns = AmazonSNSClient.builder()
-                // TODO configure AWS client?
                 .build();
 
         return ImmutableAppExternalDeps.builder()
                 .amazonSNS(sns)
                 .build();
     }
-
 }
