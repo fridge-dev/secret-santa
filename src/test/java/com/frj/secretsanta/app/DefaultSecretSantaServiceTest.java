@@ -85,4 +85,32 @@ class DefaultSecretSantaServiceTest {
         assertEquals("p4 -> p2", payloadByPhoneNumber.get("4444"));
         assertEquals("p5 -> p4", payloadByPhoneNumber.get("5555"));
     }
+
+    @Test
+    void broadcast_debugFromFile() throws Exception {
+        // -- setup --
+        when(mockSns.publish(publishRequestArgumentCaptor.capture())).thenReturn(new PublishResult());
+        SecretSantaBroadcastInput input = ImmutableSecretSantaBroadcastInput.builder()
+                .messageFormat("{self.id} -> {target.id}")
+                .personIdsToMessage(Arrays.asList("p1", "p2", "p4", "p5"))
+                .people(Arrays.asList(
+                        ServiceApiTestUtils.makePerson("p1", "1111", new HashMap<>()),
+                        ServiceApiTestUtils.makePerson("p2", "2222", new HashMap<>()),
+                        ServiceApiTestUtils.makePerson("p3", "3333", new HashMap<>()),
+                        ServiceApiTestUtils.makePerson("p4", "4444", new HashMap<>()),
+                        ServiceApiTestUtils.makePerson("p5", "5555", new HashMap<>())
+                ))
+                .exclusions(Arrays.asList(
+                        Exclusion.of("p1", "p2"),
+                        Exclusion.of("p3", "p4")
+                ))
+                .rngSeed(100L)
+                .build();
+
+        // -- execute --
+        SecretSantaBroadcastOutput _output = service.broadcastMessage(input);
+
+        // -- verify --
+        // Up to you! Attach debugger.
+    }
 }

@@ -109,7 +109,7 @@ public class DefaultSecretSantaService implements SecretSantaService {
                     .messagePayload(messagePayload)
                     .build();
 
-            smsInputs.add(new DecoratedSmsInput(smsInput, giftGiver.personId()));
+            smsInputs.add(new DecoratedSmsInput(smsInput, giftGiver.personId(), giftReceiver.personId()));
         }
 
         return smsInputs;
@@ -130,10 +130,12 @@ public class DefaultSecretSantaService implements SecretSantaService {
     private static final class DecoratedSmsInput {
         final SmsMessenger.SmsInput smsInput;
         final String recipientPersonId;
+        final String targetPersonId;
 
-        private DecoratedSmsInput(SmsMessenger.SmsInput input, String recipientPersonId) {
+        private DecoratedSmsInput(SmsMessenger.SmsInput input, String recipientPersonId, String targetPersonId) {
             this.smsInput = Objects.requireNonNull(input);
             this.recipientPersonId = Objects.requireNonNull(recipientPersonId);
+            this.targetPersonId = Objects.requireNonNull(targetPersonId);
         }
     }
 }
